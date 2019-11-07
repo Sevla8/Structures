@@ -69,9 +69,9 @@ class ArbreMap {
 		IterateurConst rechercherConst(const K&) const;
 		IterateurConst rechercherEgalOuPrecedentConst(const K&) const;
 		IterateurConst rechercherEgalOuSuivantConst(const K&) const;
-	friend std::ostream& operator<<(std::ostream& out, ArbreMap<K,V>& arbre) {
-		for (ArbreMap<K,V>::Iterateur iter = arbre.debut(); iter; ++iter)
-			out << iter.cle() << std::endl << arbre[iter.cle()] << std::endl;
+	friend std::ostream& operator<<(std::ostream& out, const ArbreMap<K,V>& arbre) {
+		for (ArbreMap<K,V>::IterateurConst iter = arbre.debutConst(); iter; ++iter)
+			out << iter.cle() << std::endl << iter.valeur() << std::endl;
 		return out;
 	}
 };
@@ -83,27 +83,27 @@ ArbreMap<K,V>::Entree::Entree(const K& c) : cle(c), valeur() {}
 
 template <class K, class V>
 bool ArbreMap<K,V>::Entree::operator<(const Entree& e) const {
-	return this->cle < e.cle;
+	return this->cle < e.cle; 
 }
 
 template <class K, class V>
 bool ArbreMap<K,V>::Entree::operator<=(const Entree& e) const {
-	return this->cle <= e.cle;
+	return this->cle <= e.cle; 
 }
 
 template <class K, class V>
 bool ArbreMap<K,V>::Entree::operator>(const Entree& e) const {
-	return this->cle > e.cle;
+	return this->cle > e.cle; 
 }
 
 template <class K, class V>
 bool ArbreMap<K,V>::Entree::operator>=(const Entree& e) const {
-	return this->cle >= e.cle;
+	return this->cle >= e.cle; 
 }
 
 template <class K, class V>
 bool ArbreMap<K,V>::Entree::operator==(const Entree& e) const {
-	return this->cle == e.cle;
+	return this->cle == e.cle; 
 }
 
 template <class K, class V>
@@ -184,6 +184,50 @@ V& ArbreMap<K,V>::Iterateur::valeur() const {
 	return (V&)(*this->iter).valeur;
 }
 
+//-----------------------------------------------------------------------------
+
+template <class K, class V>
+ArbreMap<K,V>::IterateurConst::IterateurConst(const ArbreMap& a) : iter(a.entrees) {}
+
+template <class K, class V>
+ArbreMap<K,V>::IterateurConst::IterateurConst(typename ArbreAVL<Entree>::Iterateur it) : iter(it) {}
+
+template <class K, class V>
+ArbreMap<K,V>::IterateurConst::operator bool() const {
+	return this->iter;
+}
+
+template <class K, class V>
+bool ArbreMap<K,V>::IterateurConst::operator!() const {
+	return !this->iter;
+}
+
+template <class K, class V>	// Pré-incrément
+typename ArbreMap<K,V>::IterateurConst& ArbreMap<K,V>::IterateurConst::operator++() {
+	++this->iter;
+	return *this;
+}
+
+template <class K, class V>	// Post-incrément
+typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::IterateurConst::operator++(int) {
+	Iterateur copie(*this);
+	this->operator++();
+	return copie;
+}
+
+template <class K, class V>
+const K& ArbreMap<K,V>::IterateurConst::cle() const {
+	return (*this->iter).cle;
+}
+
+template <class K, class V>
+const V& ArbreMap<K,V>::IterateurConst::valeur() const {
+	return (*this->iter).valeur;
+}
+
+//-----------------------------------------------------------------------------
+
+
 template <class K, class V>
 typename ArbreMap<K,V>::Iterateur ArbreMap<K,V>::debut() const {
 	return this->entrees.debut();
@@ -211,52 +255,14 @@ typename ArbreMap<K,V>::Iterateur ArbreMap<K,V>::rechercherEgalOuSuivant(const K
 
 //-----------------------------------------------------------------------------
 
-template <class K, class V>
-ArbreMap<K,V>::IterateurConst::IterateurConst(const ArbreMap& a) : iter(a.entrees) {}
 
 template <class K, class V>
-ArbreMap<K,V>::IterateurConst::IterateurConst(typename ArbreAVL<Entree>::IterateurConst it) : iter(it) {}
-
-template <class K, class V>
-ArbreMap<K,V>::IterateurConst::operator bool() const {
-	return this->iter;
-}
-
-template <class K, class V>
-bool ArbreMap<K,V>::IterateurConst::operator!() const {
-	return !this->iter;
-}
-
-template <class K, class V>	// Pré-incrément
-typename ArbreMap<K,V>::IterateurConst& ArbreMap<K,V>::IterateurConst::operator++() {
-	++this->iter;
-	return *this;
-}
-
-template <class K, class V>	// Post-incrément
-typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::IterateurConst::operator++(int) {
-	IterateurConst copie(*this);
-	this->operator++();
-	return copie;
-}
-
-template <class K, class V>
-const K& ArbreMap<K,V>::IterateurConst::cle() const {
-	return (*this->iter).cle;
-}
-
-template <class K, class V>
-const V& ArbreMap<K,V>::IterateurConst::valeur() const {
-	return (*this->iter).valeur;
-}
-
-template <class K, class V>
-typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::debut() const {
+typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::debutConst() const {
 	return this->entrees.debut();
 }
 
 template <class K, class V>
-typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::fin() const {
+typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::finConst() const {
 	return this->entrees.fin();
 }
 
@@ -271,8 +277,8 @@ typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::rechercherEgalOuPrecedentC
 }
 
 template <class K, class V>
-typename ArbreMap<K,V>::Iterateur ArbreMap<K,V>::rechercherEgalOuSuivantConst(const K& clef) const {
-	return this->entrees.rechercherEgalOuSuivantConst(Entree(clef));
+typename ArbreMap<K,V>::IterateurConst ArbreMap<K,V>::rechercherEgalOuSuivantConst(const K& clef) const {
+	return this->entrees.rechercherEgalOuSuivant(Entree(clef));
 }
 
 #endif
