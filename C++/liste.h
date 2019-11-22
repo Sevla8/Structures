@@ -1,7 +1,5 @@
-/*
-	INF3105 - Structures de données et algorithmes
+/*	INF3105 - Structures de données et algorithmes
 	UQAM / Département d'informatique
-
 	Liste simplement chaînée.
 */
 

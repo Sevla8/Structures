@@ -1,5 +1,4 @@
-/*
-	INF3105 -- Structures de données et algorithmes
+/*	INF3105 -- Structures de données et algorithmes
 	UQAM | Département d'informatique
 	Automne 2019 | TP1 | tableau.h
 */
@@ -30,6 +29,11 @@ class Tableau {
 		T*				elements;
 		int				capacite;
 		int				nbElements;
+	friend std::ostream& operator<<(std::ostream& out, const Tableau<T>& tab) {
+		for (int i = 0; i < tab.taille(); i += 1)
+			out << tab[i] << std::endl;
+		return out;
+	}
 	//friend void trier<T>(Tableau<T>& tab);
 };
 
