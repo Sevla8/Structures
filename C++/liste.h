@@ -3,7 +3,7 @@
 	Liste simplement chaînée.
 */
 
-#if !defined(__LISTE_H__)
+#ifndef __LISTE_H__
 #define __LISTE_H__
 
 #include <assert.h>
